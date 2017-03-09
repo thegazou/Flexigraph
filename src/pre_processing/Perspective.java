@@ -15,7 +15,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
 public class Perspective {
-	public static void correctPerspective() {
+	public static Mat correctPerspective() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 		String fileName = "pictures/DSC_0048.JPG";
@@ -76,8 +76,7 @@ public class Perspective {
 		source.add(p4);
 		Mat startM = Converters.vector_Point2f_to_Mat(source);
 		Mat result = warp(sourceImage, startM);
-
-		Imgcodecs.imwrite("pictures/correctedPicture/corrected.jpg", result);
+		return result;
 	}
 
 	public static Mat warp(Mat inputMat, Mat startM) {
