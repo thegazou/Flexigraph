@@ -18,7 +18,7 @@ public class Example
    }
 
     public static void showResult(Mat img) {
-        Imgproc.resize(img, img, new Size(640, 480));
+        Imgproc.resize(img, img, new Size(img.width()/4, img.height()/4));
         MatOfByte matOfByte = new MatOfByte();
         Imgcodecs.imencode(".jpg", img, matOfByte);
         byte[] byteArray = matOfByte.toArray();
