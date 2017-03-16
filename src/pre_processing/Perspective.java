@@ -18,7 +18,7 @@ public class Perspective {
 	public static Mat correctPerspective() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		String fileName = "pictures/DSC_0048.JPG";
+		String fileName = "pictures/image1.JPG";
 		Mat imgSource = Imgcodecs.imread(fileName, Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
 		// convert the image to black and white does (8 bit)
 		Imgproc.Canny(imgSource.clone(), imgSource, 50, 50);
