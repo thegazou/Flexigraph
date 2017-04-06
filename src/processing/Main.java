@@ -11,8 +11,8 @@ public class Main {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mat image = Imgcodecs.imread("pictures/good_picture.JPG");
 
-		// EXACTEMENT CE QUE L'ON VEUT
-        // http://stackoverflow.com/questions/39580656/opencv-c-remove-grid-from-captcha
+        //Mat image = Imgcodecs.imread("pictures/inverse_fft.png");
+        //Imgproc.threshold(image, image, 200, 255, Imgproc.THRESH_BINARY);
 
 		showResult(image);
 	}
