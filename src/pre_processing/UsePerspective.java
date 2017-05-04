@@ -1,16 +1,31 @@
 package pre_processing;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 import tools.Tools;
 
 public class UsePerspective {
 
 	public static void main(String[] args) {
-		Mat result = PerspectiveDemo.correctPerspective();
-		Tools.rotate_90n(result, result, false);
-		Tools.showResult(result, 4);
-		Imgcodecs.imwrite("pictures/correctedPicture/corrected.jpg", result);
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		String fileName = "pictures/image4.JPG";
+		File file = new File(fileName);
+
+		BufferedImage img;
+		try {
+			img = ImageIO.read(file);
+			Mat imgSource = Tools.bufferedImageToMat(img);
+			Perspective.correctPerspective(imgSource, true);
+		} catch (IOException e) {
+			System.err.println("Erreur à la lecture du fichier: " + fileName + "!");
+		}
+
 	}
 }
