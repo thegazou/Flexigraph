@@ -9,19 +9,23 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
-public class Perspective {
-	public static Mat correctPerspective(String fileName) {
+import tools.Tools;
+
+public class PerspectiveDemo {
+	public static Mat correctPerspective() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
+		String fileName = "pictures/image4.JPG";
 		Mat imgSource = Imgcodecs.imread(fileName, Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+//		rotate_90n(imgSource, imgSource, true);
 		// convert the image to black and white does (8 bit)
 		Imgproc.Canny(imgSource.clone(), imgSource, 50, 50);
-
 		// apply gaussian blur to smoothen lines of dots
 		Imgproc.GaussianBlur(imgSource, imgSource, new Size(5, 5), 5);
 
@@ -54,15 +58,21 @@ public class Perspective {
 
 		Imgproc.cvtColor(imgSource, imgSource, Imgproc.COLOR_BayerBG2RGB);
 		Mat sourceImage = Imgcodecs.imread(fileName, Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+//		rotate_90n(sourceImage, sourceImage, false);
+		Tools.showResult(sourceImage);
 		double[] temp_double;
 		temp_double = approxCurve.get(0, 0);
 		Point p1 = new Point(temp_double[0], temp_double[1]);
+		Imgproc.circle(imgSource, p1, 50, new Scalar(0, 0, 255), 10);
 		temp_double = approxCurve.get(1, 0);
 		Point p2 = new Point(temp_double[0], temp_double[1]);
+		Imgproc.circle(imgSource, p2, 50, new Scalar(255, 255, 255), 10);
 		temp_double = approxCurve.get(2, 0);
 		Point p3 = new Point(temp_double[0], temp_double[1]);
+		Imgproc.circle(imgSource, p3, 50, new Scalar(255, 0, 0), 10);
 		temp_double = approxCurve.get(3, 0);
 		Point p4 = new Point(temp_double[0], temp_double[1]);
+		Imgproc.circle(imgSource, p4, 50, new Scalar(0, 0, 255), 10);
 		List<Point> source = new ArrayList<Point>();
 		source.add(p1);
 		source.add(p2);
@@ -70,14 +80,16 @@ public class Perspective {
 		source.add(p4);
 
 		Mat startM = Converters.vector_Point2f_to_Mat(source);
+
+		Tools.showResult(imgSource, 4);
 		Mat result = warp(sourceImage, startM);
 		return result;
 	}
 
 	public static Mat warp(Mat inputMat, Mat startM) {
 
-		int resultWidth = startM.width();
-		int resultHeight = startM.height();
+		int resultWidth = inputMat.width();
+		int resultHeight = inputMat.height();
 
 		Point ocvPOut4 = new Point(0, 0);
 		Point ocvPOut1 = new Point(0, resultHeight);
@@ -85,6 +97,10 @@ public class Perspective {
 		Point ocvPOut3 = new Point(resultWidth, 0);
 
 		if (inputMat.height() > inputMat.width()) {
+			// int temp = resultWidth;
+			// resultWidth = resultHeight;
+			// resultHeight = temp;
+
 			ocvPOut3 = new Point(0, 0);
 			ocvPOut4 = new Point(0, resultHeight);
 			ocvPOut1 = new Point(resultWidth, resultHeight);
@@ -108,4 +124,6 @@ public class Perspective {
 
 		return outputMat;
 	}
+
+	
 }

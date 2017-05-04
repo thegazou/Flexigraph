@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
@@ -18,9 +19,14 @@ import org.opencv.imgproc.Imgproc;
 public class Tools {
 
 	public static void showResult(Mat img) {
-		Imgproc.resize(img, img, new Size(img.width()/2, img.height() / 2));
+		showResult(img, 2);
+	}
+
+	public static void showResult(Mat img, int zoomfactor) {
+		Mat dst = new Mat();
+		Imgproc.resize(img, dst, new Size(img.width() / zoomfactor, img.height() / zoomfactor));
 		MatOfByte matOfByte = new MatOfByte();
-		Imgcodecs.imencode(".jpg", img, matOfByte);
+		Imgcodecs.imencode(".jpg", dst, matOfByte);
 		byte[] byteArray = matOfByte.toArray();
 		BufferedImage bufImage = null;
 		try {
@@ -32,6 +38,16 @@ public class Tools {
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void rotate_90n(Mat src, Mat dst, boolean isClockwise) {
+		if (isClockwise) {
+			Core.transpose(src, dst);
+			Core.flip(dst, dst, 1);
+		} else {
+			Core.transpose(src, dst);
+			Core.flip(dst, dst, 0);
 		}
 	}
 }

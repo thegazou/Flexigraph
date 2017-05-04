@@ -10,5 +10,4 @@ public class Example {
 		Mat image = Imgcodecs.imread("pictures/good_picture.JPG");
 		Tools.showResult(image);
 	}
-
 }
