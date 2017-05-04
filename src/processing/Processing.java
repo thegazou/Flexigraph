@@ -2,7 +2,12 @@ package processing;
 
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import tools.Tools;
 
+import javax.tools.Tool;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +23,11 @@ public class Processing {
     Mat complexImage = new Mat();
 
 
-    public Mat fourierTransform(String img) {
+    public Mat fourierTransform(Mat image) {
 
-        Mat image = Imgcodecs.imread(img, 0);
-        if (image.empty())
-            return new Mat();
+
+        planes = new ArrayList();
+        complexImage = new Mat();
 
         Mat padded = new Mat(); // expand input image to optimal size
         int addPixelRows = Core.getOptimalDFTSize(image.rows());
@@ -30,7 +35,7 @@ public class Processing {
         // border
         // add zero
         // values
-        Core.copyMakeBorder(image, padded, (4096-image.height())/2, (4096-image.height())/2, (4096-image.width())/2, (4096-image.width())/2,
+        Core.copyMakeBorder(image, padded, (addPixelRows-image.height())/2, (addPixelRows-image.height())/2, (addPixelCols-image.width())/2, (addPixelCols-image.width())/2,
                 Core.BORDER_CONSTANT, Scalar.all(0));
 
         padded.convertTo(padded, CvType.CV_32F);
@@ -44,13 +49,6 @@ public class Processing {
 
         Core.add(Mat.ones(mag.size(), CvType.CV_32F), mag, mag);
         Core.log(mag, mag);
-
-        System.out.println("imWidth: " + image.size().width);
-        System.out.println("imHeight: " + image.size().height);
-
-        System.out.println("paddedWith: " + padded.size().width);
-        System.out.println("Col: " + (mag.cols() - 4));
-        System.out.println("Raw: " + (mag.rows() - 55));
 
         padded = padded.submat(new Rect(0, 0, mag.cols(), mag.rows()));
         int cx = padded.cols() / 2;
@@ -72,7 +70,6 @@ public class Processing {
 
         Core.normalize(mag, mag, 0, 255, Core.NORM_MINMAX);
 
-
         return mag;
     }
 
@@ -89,22 +86,31 @@ public class Processing {
 
         // Dessiner le masque
         // L'image est coupée en 4 le milleu se retrouve sur les bords
-        for (int i = 10; i < complexImage.width(); i++)
+
+
+        int marge = 0;
+        int largeur = 3;
+        // Hauteur
+
+        for (int i = marge; i < complexImage.height() - marge; i++)
         {
 
-            for (int j = 10; j < 50; j++)
+            for (int j = 0; j < largeur; j++)
             {
-                mask.put(i, j, 1);
-                mask.put(i, complexImage.height()-j, 1);
+                mask.put(i, j, 255);
+                mask.put(i, complexImage.width()-j,  255);
             }
         }
-        for (int i = 10; i < complexImage.height(); i++)
+
+        // Largeur
+
+        for (int i = marge; i < complexImage.width() - marge; i++)
         {
 
-            for (int j = 10; j < 50; j++)
+            for (int j = 0; j < largeur; j++)
             {
-                mask.put(j, i, 1);
-                mask.put(complexImage.width()-j, i, 1);
+                mask.put(j, i, 255);
+                mask.put(complexImage.height()-j, i, 255);
             }
         }
 
@@ -117,5 +123,4 @@ public class Processing {
 
        return restoredImage;
     }
-
 }
