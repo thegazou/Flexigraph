@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Flexigraph:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/Flexigraph_jar</output-path>
+    <root id="archive" name="Flexigraph.jar">
+      <element id="module-output" name="Flexigraph" />
+      <element id="extracted-dir" path="/usr/local/share/OpenCV/java/opencv-320.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
